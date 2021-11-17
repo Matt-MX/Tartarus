@@ -37,17 +37,17 @@
         <dependency>
             <groupId>io.imgui.java</groupId>
             <artifactId>binding</artifactId>
-            <version>1.76-0.9</version>
+            <version>1.77-0.17</version>
         </dependency>
         <dependency>
             <groupId>io.imgui.java</groupId>
             <artifactId>lwjgl3</artifactId>
-            <version>1.76-0.9</version>
+            <version>1.77-0.17</version>
         </dependency>
         <dependency>
             <groupId>io.imgui.java</groupId>
             <artifactId>natives-windows</artifactId>
-            <version>1.76-0.9</version>
+            <version>1.77-0.17</version>
         </dependency>
 
         <dependency>

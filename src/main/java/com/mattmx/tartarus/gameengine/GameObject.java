@@ -1,27 +1,26 @@
 package com.mattmx.tartarus.gameengine;
 
+import com.mattmx.tartarus.components.Component;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class GameObject {
+    private static int ID_COUNTER = 0;
+    private int uid = -1;
 
     private String name;
     private List<Component> components;
     public Transform transform;
     private int zIndex;
 
-    public GameObject(String name) {
-        this.name = name;
-        this.components = new ArrayList<>();
-        this.transform = new Transform();
-        this.zIndex = 0;
-    }
-
     public GameObject(String name, Transform transform, int zIndex){
         this.name = name;
         this.components = new ArrayList<>();
         this.transform = transform;
         this.zIndex = zIndex;
+
+        this.uid = ID_COUNTER++;
     }
 
     public <T extends Component> T getComponent(Class<T> componentClass){
@@ -49,6 +48,7 @@ public class GameObject {
     }
 
     public void addComponent(Component c){
+        c.generateId();
         this.components.add(c);
         c.gameObject = this;
     }
@@ -73,5 +73,17 @@ public class GameObject {
 
     public int zIndex() {
         return this.zIndex;
+    }
+
+    public static void init(int maxId) {
+        ID_COUNTER = maxId;
+    }
+
+    public int getUid() {
+        return this.uid;
+    }
+
+    public List<Component> getAllComponents() {
+        return this.components;
     }
 }

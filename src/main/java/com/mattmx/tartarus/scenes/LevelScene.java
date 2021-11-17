@@ -1,6 +1,9 @@
-package com.mattmx.tartarus.gameengine;
+package com.mattmx.tartarus.scenes;
 
-public class LevelScene extends Scene{
+import com.mattmx.tartarus.gameengine.Window;
+import com.mattmx.tartarus.scenes.Scene;
+
+public class LevelScene extends Scene {
     public LevelScene(){
         System.out.println("Inside Level Scene");
         Window.get().r = 1;
@@ -10,6 +13,11 @@ public class LevelScene extends Scene{
 
     @Override
     public void update(float dt) {
+
+    }
+
+    @Override
+    public void render() {
 
     }
 }

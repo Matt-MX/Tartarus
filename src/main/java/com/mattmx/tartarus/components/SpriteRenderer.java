@@ -1,6 +1,5 @@
 package com.mattmx.tartarus.components;
 
-import com.mattmx.tartarus.gameengine.Component;
 import com.mattmx.tartarus.gameengine.Transform;
 import com.mattmx.tartarus.gameengine.renderer.Texture;
 import imgui.ImGui;
@@ -13,7 +12,7 @@ public class SpriteRenderer extends Component {
     private Sprite sprite = new Sprite();
 
     private transient Transform lastTransform;
-    private transient boolean isDirty = false;
+    private transient boolean isDirty = true;
 
 //    public SpriteRenderer(Vector4f color){
 //        this.color = color;
@@ -79,5 +78,9 @@ public class SpriteRenderer extends Component {
 
     public void clean() {
         this.isDirty = false;
+    }
+
+    public void setTexture(Texture texture) {
+        this.sprite.setTexture(texture);
     }
 }

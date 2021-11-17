@@ -1,7 +1,5 @@
 package com.mattmx.tartarus.components;
 
-import com.mattmx.tartarus.gameengine.Component;
-
 public class FontRenderer extends Component {
 
     @Override
