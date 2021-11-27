@@ -7,25 +7,25 @@ public class Framebuffer {
     private Texture texture = null;
 
     public Framebuffer(int width, int height) {
-        // Gen Framebuffer
+        // Generate framebuffer
         fboID = glGenFramebuffers();
         glBindFramebuffer(GL_FRAMEBUFFER, fboID);
 
-        // Create the texture to render the data to, attach to frame buffer
+        // Create the texture to render the data to, and attach it to our framebuffer
         this.texture = new Texture(width, height);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this.texture.getId(), 0);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                this.texture.getId(), 0);
 
-        // Create render buffer - Store depth info
+        // Create renderbuffer store the depth info
         int rboID = glGenRenderbuffers();
         glBindRenderbuffer(GL_RENDERBUFFER, rboID);
         glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32, width, height);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboID);
 
-        // Make sure it all worked
         if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
             assert false : "Error: Framebuffer is not complete";
         }
-        glBindRenderbuffer(GL_FRAMEBUFFER, 0);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
     public void bind() {

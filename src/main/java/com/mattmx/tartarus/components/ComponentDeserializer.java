@@ -5,25 +5,27 @@ import com.mattmx.tartarus.components.Component;
 
 import java.lang.reflect.Type;
 
-public class ComponentDeserializer implements JsonSerializer<Component>, JsonDeserializer<Component> {
+public class ComponentDeserializer implements JsonSerializer<Component>,
+        JsonDeserializer<Component> {
 
     @Override
-    public Component deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-        JsonObject jsonObject = jsonElement.getAsJsonObject();
-        String t = jsonObject.get("type").getAsString();
+    public Component deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        JsonObject jsonObject = json.getAsJsonObject();
+        String type = jsonObject.get("type").getAsString();
         JsonElement element = jsonObject.get("properties");
+
         try {
-            return jsonDeserializationContext.deserialize(element, Class.forName(t));
+            return context.deserialize(element, Class.forName(type));
         } catch (ClassNotFoundException e) {
-            throw new JsonParseException("Unknown element ," + type, e);
+            throw new JsonParseException("Unknown element type: " + type, e);
         }
     }
 
     @Override
-    public JsonElement serialize(Component component, Type type, JsonSerializationContext jsonSerializationContext) {
+    public JsonElement serialize(Component src, Type typeOfSrc, JsonSerializationContext context) {
         JsonObject result = new JsonObject();
-        result.add("type", new JsonPrimitive(component.getClass().getCanonicalName()));
-        result.add("properties", jsonSerializationContext.serialize(component, component.getClass()));
+        result.add("type", new JsonPrimitive(src.getClass().getCanonicalName()));
+        result.add("properties", context.serialize(src, src.getClass()));
         return result;
     }
 }

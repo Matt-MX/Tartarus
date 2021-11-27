@@ -87,7 +87,7 @@ public class DebugDraw {
         }
 
         glBindBuffer(GL_ARRAY_BUFFER, vboID);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, Arrays.copyOfRange(vertexArray, 0, lines.size() * 6 * 2));
+        glBufferData(GL_ARRAY_BUFFER, vertexArray, GL_DYNAMIC_DRAW);
 
         // Use our shader
         shader.use();
@@ -116,7 +116,7 @@ public class DebugDraw {
     // ==================================================
     public static void addLine2D(Vector2f from, Vector2f to) {
         // TODO: ADD CONSTANTS FOR COMMON COLORS
-        addLine2D(from, to, new Vector3f(0, 0, 0), 1);
+        addLine2D(from, to, new Vector3f(0, 1, 0), 1);
     }
 
     public static void addLine2D(Vector2f from, Vector2f to, Vector3f color) {
@@ -133,27 +133,26 @@ public class DebugDraw {
     // ==================================================
     public static void addBox2D(Vector2f center, Vector2f dimensions, float rotation) {
         // TODO: ADD CONSTANTS FOR COMMON COLORS
-        addBox2D(center, dimensions, rotation, new Vector3f(0, 0, 0), 1);
+        addBox2D(center, dimensions, rotation, new Vector3f(0, 1, 0), 1);
     }
 
     public static void addBox2D(Vector2f center, Vector2f dimensions, float rotation, Vector3f color) {
         addBox2D(center, dimensions, rotation, color, 1);
     }
 
-    public static void addBox2D(Vector2f center, Vector2f dimensions, float rotation, Vector3f color, int lifetime) {
+    public static void addBox2D(Vector2f center, Vector2f dimensions, float rotation,
+                                Vector3f color, int lifetime) {
         Vector2f min = new Vector2f(center).sub(new Vector2f(dimensions).mul(0.5f));
         Vector2f max = new Vector2f(center).add(new Vector2f(dimensions).mul(0.5f));
 
         Vector2f[] vertices = {
-            new Vector2f(min.x, min.y),
-            new Vector2f(min.x, max.y),
-            new Vector2f(max.x, max.y),
-            new Vector2f(max.x, min.y)
+                new Vector2f(min.x, min.y), new Vector2f(min.x, max.y),
+                new Vector2f(max.x, max.y), new Vector2f(max.x, min.y)
         };
 
         if (rotation != 0.0f) {
-            for (Vector2f ver : vertices) {
-                JMath.rotate(ver, rotation, center);
+            for (Vector2f vert : vertices) {
+                JMath.rotate(vert, rotation, center);
             }
         }
 
@@ -168,19 +167,20 @@ public class DebugDraw {
     // ==================================================
     public static void addCircle(Vector2f center, float radius) {
         // TODO: ADD CONSTANTS FOR COMMON COLORS
-        addCircle(center, radius, new Vector3f(0, 0, 0), 1);
+        addCircle(center, radius, new Vector3f(0, 1, 0), 1);
     }
 
     public static void addCircle(Vector2f center, float radius, Vector3f color) {
         addCircle(center, radius, color, 1);
     }
+
     public static void addCircle(Vector2f center, float radius, Vector3f color, int lifetime) {
         Vector2f[] points = new Vector2f[20];
         int increment = 360 / points.length;
         int currentAngle = 0;
 
-        for (int i = 0; i < points.length; i++) {
-            Vector2f tmp = new Vector2f(radius, 0);
+        for (int i=0; i < points.length; i++) {
+            Vector2f tmp = new Vector2f(0, radius);
             JMath.rotate(tmp, currentAngle, new Vector2f());
             points[i] = new Vector2f(tmp).add(center);
 
@@ -189,6 +189,7 @@ public class DebugDraw {
             }
             currentAngle += increment;
         }
+
         addLine2D(points[points.length - 1], points[0], color, lifetime);
     }
 }

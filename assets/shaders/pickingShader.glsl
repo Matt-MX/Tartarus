@@ -39,10 +39,11 @@ out vec3 color;
 void main()
 {
     vec4 texColor = vec4(1, 1, 1, 1);
-    if (fTexId > 0){
+    if (fTexId > 0) {
         int id = int(fTexId);
         texColor = fColor * texture(uTextures[id], fTexCoords);
     }
+
     if (texColor.a < 0.5) {
         discard;
     }

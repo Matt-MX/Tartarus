@@ -59,6 +59,9 @@ public class Shader {
     }
 
     public void compile() {
+        // ============================================================
+        // Compile and link shaders
+        // ============================================================
         int vertexID, fragmentID;
 
         // First load and compile the vertex shader
@@ -108,8 +111,8 @@ public class Shader {
     }
 
     public void use() {
-        // Bind shader program
         if (!beingUsed) {
+            // Bind shader program
             glUseProgram(shaderProgramID);
             beingUsed = true;
         }
@@ -166,13 +169,13 @@ public class Shader {
         glUniform1i(varLocation, val);
     }
 
-    public void uploadTexture(String varName, int slot){
+    public void uploadTexture(String varName, int slot) {
         int varLocation = glGetUniformLocation(shaderProgramID, varName);
         use();
         glUniform1i(varLocation, slot);
     }
 
-    public void uploadIntArray(String varName, int[] array){
+    public void uploadIntArray(String varName, int[] array) {
         int varLocation = glGetUniformLocation(shaderProgramID, varName);
         use();
         glUniform1iv(varLocation, array);

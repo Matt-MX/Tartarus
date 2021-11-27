@@ -1,10 +1,12 @@
 package com.mattmx.tartarus.util;
 
 import com.mattmx.tartarus.components.Spritesheet;
+import com.mattmx.tartarus.gameengine.Sound;
 import com.mattmx.tartarus.gameengine.renderer.Shader;
 import com.mattmx.tartarus.gameengine.renderer.Texture;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,11 +14,12 @@ public class AssetPool {
     private static Map<String, Shader> shaders = new HashMap<>();
     private static Map<String, Texture> textures = new HashMap<>();
     private static Map<String, Spritesheet> spritesheets = new HashMap<>();
+    private static Map<String, Sound> sounds = new HashMap<>();
 
-    public static Shader getShader(String resourceName){
+    public static Shader getShader(String resourceName) {
         File file = new File(resourceName);
-        if (AssetPool.shaders.containsKey(file.getAbsolutePath())){
-            return shaders.get(file.getAbsolutePath());
+        if (AssetPool.shaders.containsKey(file.getAbsolutePath())) {
+            return AssetPool.shaders.get(file.getAbsolutePath());
         } else {
             Shader shader = new Shader(resourceName);
             shader.compile();
@@ -25,9 +28,9 @@ public class AssetPool {
         }
     }
 
-    public static Texture getTexture(String resourceName){
+    public static Texture getTexture(String resourceName) {
         File file = new File(resourceName);
-        if (AssetPool.textures.containsKey(file.getAbsolutePath())){
+        if (AssetPool.textures.containsKey(file.getAbsolutePath())) {
             return AssetPool.textures.get(file.getAbsolutePath());
         } else {
             Texture texture = new Texture();
@@ -37,18 +40,43 @@ public class AssetPool {
         }
     }
 
-    public static void addSpriteSheet(String resourceName, Spritesheet spritesheet) {
+    public static void addSpritesheet(String resourceName, Spritesheet spritesheet) {
         File file = new File(resourceName);
         if (!AssetPool.spritesheets.containsKey(file.getAbsolutePath())) {
             AssetPool.spritesheets.put(file.getAbsolutePath(), spritesheet);
         }
     }
 
-    public static Spritesheet getSpriteSheet(String resourceName) {
+    public static Spritesheet getSpritesheet(String resourceName) {
         File file = new File(resourceName);
         if (!AssetPool.spritesheets.containsKey(file.getAbsolutePath())) {
-            assert false : "ERROR: [Spritesheet] Tried to access spritesheet '" + resourceName + "', when it isn't added to Asset Pool";
+            assert false : "Error: Tried to access spritesheet '" + resourceName + "' and it has not been added to asset pool.";
         }
         return AssetPool.spritesheets.getOrDefault(file.getAbsolutePath(), null);
+    }
+
+    public static Collection<Sound> getAllSounds() {
+        return sounds.values();
+    }
+
+    public static Sound getSound(String soundFile) {
+        File file = new File(soundFile);
+        if (sounds.containsKey(file.getAbsolutePath())) {
+            return sounds.get(file.getAbsolutePath());
+        } else {
+            assert false : "Sound file not added '" + soundFile + "'";
+        }
+        return null;
+    }
+
+    public static Sound addSound(String soundFile, boolean loops) {
+        File file = new File(soundFile);
+        if (sounds.containsKey(file.getAbsolutePath())) {
+            return sounds.get(file.getAbsolutePath());
+        } else {
+            Sound sound = new Sound(file.getAbsolutePath(), loops);
+            AssetPool.sounds.put(file.getAbsolutePath(), sound);
+            return sound;
+        }
     }
 }

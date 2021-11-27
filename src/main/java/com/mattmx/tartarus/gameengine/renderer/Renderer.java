@@ -12,21 +12,21 @@ public class Renderer {
     private List<RenderBatch> batches;
     private static Shader currentShader;
 
-    public Renderer(){
+    public Renderer() {
         this.batches = new ArrayList<>();
     }
 
-    public void add(GameObject go){
+    public void add(GameObject go) {
         SpriteRenderer spr = go.getComponent(SpriteRenderer.class);
-        if (spr != null){
+        if (spr != null) {
             add(spr);
         }
     }
 
-    private void add(SpriteRenderer sprite){
+    private void add(SpriteRenderer sprite) {
         boolean added = false;
-        for (RenderBatch batch : batches){
-            if (batch.hasRoom() && batch.zIndex() == sprite.gameObject.zIndex()) {
+        for (RenderBatch batch : batches) {
+            if (batch.hasRoom() && batch.zIndex() == sprite.gameObject.transform.zIndex) {
                 Texture tex = sprite.getTexture();
                 if (tex == null || (batch.hasTexture(tex) || batch.hasTextureRoom())) {
                     batch.addSprite(sprite);
@@ -36,12 +36,22 @@ public class Renderer {
             }
         }
 
-        if (!added){
-            RenderBatch newBatch = new RenderBatch(MAX_BATCH_SIZE, sprite.gameObject.zIndex());
+        if (!added) {
+            RenderBatch newBatch = new RenderBatch(MAX_BATCH_SIZE,
+                    sprite.gameObject.transform.zIndex, this);
             newBatch.start();
             batches.add(newBatch);
             newBatch.addSprite(sprite);
             Collections.sort(batches);
+        }
+    }
+
+    public void destroyGameObject(GameObject go) {
+        if (go.getComponent(SpriteRenderer.class) == null) return;
+        for (RenderBatch batch : batches) {
+            if (batch.destroyIfExists(go)) {
+                return;
+            }
         }
     }
 
@@ -53,9 +63,10 @@ public class Renderer {
         return currentShader;
     }
 
-    public void render(){
+    public void render() {
         currentShader.use();
-        for (RenderBatch batch : batches){
+        for (int i = 0; i < batches.size(); i++) {
+            RenderBatch batch = batches.get(i);
             batch.render();
         }
     }

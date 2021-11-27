@@ -7,17 +7,17 @@ import java.lang.reflect.Type;
 
 public class GameObjectDeserializer implements JsonDeserializer<GameObject> {
     @Override
-    public GameObject deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-        JsonObject jsonObject = jsonElement.getAsJsonObject();
+    public GameObject deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        JsonObject jsonObject = json.getAsJsonObject();
         String name = jsonObject.get("name").getAsString();
         JsonArray components = jsonObject.getAsJsonArray("components");
-        Transform transform = jsonDeserializationContext.deserialize(jsonObject.get("transform"), Transform.class);
-        int zIndex = jsonDeserializationContext.deserialize(jsonObject.get("zIndex"), int.class);
-        GameObject go = new GameObject(name, transform, zIndex);
+
+        GameObject go = new GameObject(name);
         for (JsonElement e : components) {
-            Component c = jsonDeserializationContext.deserialize(e, Component.class);
+            Component c = context.deserialize(e, Component.class);
             go.addComponent(c);
         }
+        go.transform = go.getComponent(Transform.class);
         return go;
     }
 }
