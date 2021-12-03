@@ -72,6 +72,15 @@ public class Scene {
         }
     }
 
+    public <T extends Component> GameObject getGameObjectWith(Class<T> clazz) {
+        for (GameObject go : gameObjects) {
+            if (go.getComponent(clazz) != null) {
+                return go;
+            }
+        }
+        return null;
+    }
+
     public List<GameObject> getGameObjects() {
         return this.gameObjects;
     }
@@ -140,6 +149,7 @@ public class Scene {
                 .setPrettyPrinting()
                 .registerTypeAdapter(Component.class, new ComponentDeserializer())
                 .registerTypeAdapter(GameObject.class, new GameObjectDeserializer())
+                .enableComplexMapKeySerialization()
                 .create();
 
         try {
@@ -158,40 +168,45 @@ public class Scene {
     }
 
     public void load() {
-        Gson gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .registerTypeAdapter(Component.class, new ComponentDeserializer())
-                .registerTypeAdapter(GameObject.class, new GameObjectDeserializer())
-                .create();
+//        Gson gson = new GsonBuilder()
+//                .setPrettyPrinting()
+//                .registerTypeAdapter(Component.class, new ComponentDeserializer())
+//                .registerTypeAdapter(GameObject.class, new GameObjectDeserializer())
+//                .enableComplexMapKeySerialization()
+//                .create();
+//
+//        String inFile = "";
+//        try {
+//            inFile = new String(Files.readAllBytes(Paths.get("level.txt")));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        if (!inFile.equals("")) {
+//            int maxGoId = -1;
+//            int maxCompId = -1;
+//            GameObject[] objs = gson.fromJson(inFile, GameObject[].class);
+//            for (int i=0; i < objs.length; i++) {
+//                addGameObjectToScene(objs[i]);
+//
+//                for (Component c : objs[i].getAllComponents()) {
+//                    if (c.getUid() > maxCompId) {
+//                        maxCompId = c.getUid();
+//                    }
+//                }
+//                if (objs[i].getUid() > maxGoId) {
+//                    maxGoId = objs[i].getUid();
+//                }
+//            }
+//
+//            maxGoId++;
+//            maxCompId++;
+//            GameObject.init(maxGoId);
+//            Component.init(maxCompId);
+//        }
+    }
 
-        String inFile = "";
-        try {
-            inFile = new String(Files.readAllBytes(Paths.get("level.txt")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        if (!inFile.equals("")) {
-            int maxGoId = -1;
-            int maxCompId = -1;
-            GameObject[] objs = gson.fromJson(inFile, GameObject[].class);
-            for (int i=0; i < objs.length; i++) {
-                addGameObjectToScene(objs[i]);
-
-                for (Component c : objs[i].getAllComponents()) {
-                    if (c.getUid() > maxCompId) {
-                        maxCompId = c.getUid();
-                    }
-                }
-                if (objs[i].getUid() > maxGoId) {
-                    maxGoId = objs[i].getUid();
-                }
-            }
-
-            maxGoId++;
-            maxCompId++;
-            GameObject.init(maxGoId);
-            Component.init(maxCompId);
-        }
+    public Physics2D getPhysics() {
+        return this.physics2D;
     }
 }

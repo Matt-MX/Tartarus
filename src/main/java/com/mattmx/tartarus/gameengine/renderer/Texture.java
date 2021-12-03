@@ -31,6 +31,8 @@ public class Texture {
 
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height,
                 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+        this.width = width;
+        this.height = height;
     }
 
     public void init(String filepath) {
@@ -66,7 +68,7 @@ public class Texture {
                 glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width.get(0), height.get(0),
                         0, GL_RGBA, GL_UNSIGNED_BYTE, image);
             } else {
-                assert false : "Error: (Texture) Unknown number of channesl '" + channels.get(0) + "'";
+                assert false : "Error: (Texture) Unknown number of channels '" + channels.get(0) + "'";
             }
         } else {
             assert false : "Error: (Texture) Could not load image '" + filepath + "'";

@@ -24,7 +24,6 @@ public class GameObject {
     public GameObject(String name) {
         this.name = name;
         this.components = new ArrayList<>();
-
         this.uid = ID_COUNTER++;
     }
 
@@ -79,8 +78,9 @@ public class GameObject {
 
     public void imgui() {
         for (Component c : components) {
-            if (ImGui.collapsingHeader(c.getClass().getSimpleName()))
+            if (c.isWindow) {
                 c.imgui();
+            }
         }
     }
 
@@ -96,6 +96,7 @@ public class GameObject {
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(Component.class, new ComponentDeserializer())
                 .registerTypeAdapter(GameObject.class, new GameObjectDeserializer())
+                .enableComplexMapKeySerialization()
                 .create();
         String objAsJson = gson.toJson(this);
         GameObject obj = gson.fromJson(objAsJson, GameObject.class);

@@ -1,0 +1,11 @@
+{
+  "WINDOW_WIDTH": 1920,
+  "WINDOW_HEIGHT": 1080,
+  "WINDOW_POSX": 0,
+  "WINDOW_POSY": 23,
+  "KEY_LEFT": 65,
+  "KEY_RIGHT": 68,
+  "KEY_UP": 32,
+  "MENU": 256,
+  "INVENTORY": 69
+}

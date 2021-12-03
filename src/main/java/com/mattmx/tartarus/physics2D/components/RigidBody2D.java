@@ -1,6 +1,8 @@
 package com.mattmx.tartarus.physics2D.components;
 
 import com.mattmx.tartarus.components.Component;
+import com.mattmx.tartarus.gameengine.Window;
+import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
@@ -12,6 +14,10 @@ public class RigidBody2D extends Component {
     private float linearDamping = 0.9f;
     private float mass = 0;
     private BodyType bodyType = BodyType.DYNAMIC;
+    private float friction = 0.1f;
+    public float angularVelocity = 0.0f;
+    public float gravityScale = 1.0f;
+    private boolean isSensor = false;
 
     private boolean fixedRotation = false;
     private boolean continuousCollision = true;
@@ -25,10 +31,32 @@ public class RigidBody2D extends Component {
 
     @Override
     public void update(float dt) {
-        Collider collider = gameObject.getComponent(Collider.class);
-        if (rawBody != null && isPlaying && collider != null) {
-            this.gameObject.transform.position.set(this.rawBody.getPosition().x - collider.getOffset().x, this.rawBody.getPosition().y - collider.getOffset().y);
-            this.gameObject.transform.rotation = (float) Math.toDegrees(this.rawBody.getAngle());
+        if (rawBody != null) {
+            if (this.bodyType == BodyType.DYNAMIC || this.bodyType == BodyType.KINEMATIC) {
+                this.gameObject.transform.position.set(
+                        rawBody.getPosition().x, rawBody.getPosition().y
+                );
+                this.gameObject.transform.rotation = (float) Math.toDegrees(rawBody.getAngle());
+                Vec2 vel = rawBody.getLinearVelocity();
+                this.velocity.set(vel.x, vel.y);
+            } else if (this.bodyType == BodyType.STATIC) {
+                this.rawBody.setTransform(new Vec2(
+                        this.gameObject.transform.position.x,
+                        this.gameObject.transform.position.y
+                ), this.gameObject.transform.rotation);
+            }
+        }
+    }
+
+    public void addVelocity(Vector2f force) {
+        if (rawBody != null) {
+            rawBody.applyForceToCenter(new Vec2(velocity.x, velocity.y));
+        }
+    }
+
+    public void addImpulse(Vector2f impulse) {
+        if (rawBody != null) {
+            rawBody.applyLinearImpulse(new Vec2(velocity.x, velocity.y), rawBody.getWorldCenter(), false);
         }
     }
 
@@ -38,6 +66,45 @@ public class RigidBody2D extends Component {
 
     public void setVelocity(Vector2f velocity) {
         this.velocity = velocity;
+        if (rawBody != null) {
+            this.rawBody.setLinearVelocity(new Vec2(velocity.x, velocity.y));
+        }
+    }
+
+    public void setAngularVelocity(float angularVelocity) {
+        this.angularVelocity = angularVelocity;
+        if (rawBody != null) {
+            this.rawBody.setAngularVelocity(angularVelocity);
+        }
+    }
+
+    public void setGravityScale(float scale) {
+        this.gravityScale = scale;
+        if (rawBody != null) {
+            this.rawBody.setGravityScale(scale);
+        }
+    }
+
+    public void setIsSensor() {
+        isSensor = true;
+        if (rawBody != null) {
+            Window.getPhysics().setIsSensor(this);
+        }
+    }
+
+    public void setNotSensor() {
+        isSensor = false;
+        if (rawBody != null) {
+            Window.getPhysics().setIsSensor(this);
+        }
+    }
+
+    public boolean isSensor() {
+        return this.isSensor;
+    }
+
+    public float getFriction() {
+        return this.friction;
     }
 
     public float getAngularDamping() {

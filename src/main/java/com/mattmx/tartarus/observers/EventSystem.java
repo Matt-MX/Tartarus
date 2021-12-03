@@ -5,7 +5,7 @@ import com.mattmx.tartarus.observers.events.Event;
 
 import java.util.*;
 
-public class ObserverHandler {
+public class EventSystem {
     private static List<Observer> observers = new ArrayList<>();
 
     public static void addObserver(Observer observer) {

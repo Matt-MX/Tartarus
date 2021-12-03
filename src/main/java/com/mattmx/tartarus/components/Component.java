@@ -4,6 +4,7 @@ import com.mattmx.tartarus.editor.JImGui;
 import com.mattmx.tartarus.gameengine.GameObject;
 import imgui.ImGui;
 import imgui.type.ImInt;
+import org.jbox2d.dynamics.contacts.Contact;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -14,6 +15,7 @@ import java.lang.reflect.Modifier;
 public abstract class Component {
     private static int ID_COUNTER = 0;
     private int uid = -1;
+    public boolean isWindow = false;
 
     public transient GameObject gameObject = null;
 
@@ -26,6 +28,22 @@ public abstract class Component {
     }
 
     public void editorUpdate(float dt) {
+
+    }
+
+    public void beginCollision(GameObject collidingObj, Contact contact, Vector2f hitNormal) {
+
+    }
+
+    public void endCollision(GameObject collidingObj, Contact contact, Vector2f hitNormal) {
+
+    }
+
+    public void preSolve(GameObject collidingObj, Contact contact, Vector2f hitNormal) {
+
+    }
+
+    public void postSolve(GameObject collidingObj, Contact contact, Vector2f hitNormal) {
 
     }
 

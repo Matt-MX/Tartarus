@@ -3,10 +3,12 @@ package com.mattmx.tartarus.gameengine;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 public class Camera {
     private Matrix4f projectionMatrix, viewMatrix, inverseProjection, inverseView;
     public Vector2f position;
+    public Vector4f clearColor = new Vector4f(1f, 1f, 1f, 1f);
 
     private float projectionWidth = 6;
     private float projectionHeight = 3;

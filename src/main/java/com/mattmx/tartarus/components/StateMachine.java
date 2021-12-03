@@ -63,23 +63,14 @@ public class StateMachine extends Component {
                 }
             }
         }
-        System.out.println("Unable to fine state '" + animTitle +"' Default state");
+        //System.out.println("Unable to fine state '" + animTitle +"' Default state");
     }
 
     public void trigger(String trigger) {
         for (StateTrigger state : stateTransfers.keySet()) {
             if (state.state.equals(currentState.title) && state.trigger.equals(trigger)) {
                 if (stateTransfers.get(state) != null) {
-                    int newStateIndex = -1;
-                    int index = 0;
-                    for (AnimationState s : states) {
-                        if (s.title.equals(stateTransfers.get(state))) {
-                            newStateIndex = index;
-                            break;
-                        }
-                        index++;
-                    }
-
+                    int newStateIndex = stateIndexOf(stateTransfers.get(state));
                     if (newStateIndex > -1) {
                         currentState = states.get(newStateIndex);
                     }
@@ -87,7 +78,18 @@ public class StateMachine extends Component {
                 return;
             }
         }
-        System.out.println("Unable to find trigger '" + trigger + "'");
+        //System.out.println("Unable to find trigger '" + trigger + "'");
+    }
+
+    private int stateIndexOf(String s) {
+        int index = 0;
+        for (AnimationState state : states) {
+            if (state.title.equals(s)) {
+                return index;
+            }
+            index++;
+        }
+        return -1;
     }
 
     @Override

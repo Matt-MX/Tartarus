@@ -1,6 +1,8 @@
 package com.mattmx.tartarus.util;
 import org.joml.Vector2f;
 
+import java.util.Random;
+
 public class JMath {
 
     public static void rotate(Vector2f vec, float angleDeg, Vector2f origin) {
@@ -34,5 +36,9 @@ public class JMath {
 
     public static boolean compare(Vector2f vec1, Vector2f vec2) {
         return compare(vec1.x, vec2.x) && compare(vec1.y, vec2.y);
+    }
+
+    public static float randomFloat() {
+        return new Random().nextFloat();
     }
 }

@@ -2,7 +2,7 @@ package com.mattmx.tartarus.editor;
 
 import com.mattmx.tartarus.gameengine.MouseListener;
 import com.mattmx.tartarus.gameengine.Window;
-import com.mattmx.tartarus.observers.ObserverHandler;
+import com.mattmx.tartarus.observers.EventSystem;
 import com.mattmx.tartarus.observers.events.Event;
 import com.mattmx.tartarus.observers.events.EventType;
 import imgui.ImGui;
@@ -16,20 +16,11 @@ public class GameViewWindow {
     private boolean isPlaying = false;
 
     public void imgui() {
-        ImGui.begin("Game Viewport", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse
-                | ImGuiWindowFlags.MenuBar);
-
-        ImGui.beginMenuBar();
-        if (ImGui.menuItem("Play", "", isPlaying, !isPlaying)) {
-            isPlaying = true;
-            ObserverHandler.notify(null, new Event(EventType.GameEngineStartPlay));
-        }
-        if (ImGui.menuItem("Stop", "", !isPlaying, isPlaying)) {
-            isPlaying = false;
-            ObserverHandler.notify(null, new Event(EventType.GameEngineStopPlay));
-        }
-        ImGui.endMenuBar();
-
+        ImGui.begin("Game Viewport", ImGuiWindowFlags.NoScrollbar |
+                ImGuiWindowFlags.NoScrollWithMouse |
+                ImGuiWindowFlags.NoMove |
+                ImGuiWindowFlags.NoResize |
+                ImGuiWindowFlags.NoTitleBar);
 
         ImGui.setCursorPos(ImGui.getCursorPosX(), ImGui.getCursorPosY());
         ImVec2 windowSize = getLargestSizeForViewport();

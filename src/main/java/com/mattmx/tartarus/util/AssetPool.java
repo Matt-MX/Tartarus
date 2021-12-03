@@ -5,7 +5,9 @@ import com.mattmx.tartarus.gameengine.Sound;
 import com.mattmx.tartarus.gameengine.renderer.Shader;
 import com.mattmx.tartarus.gameengine.renderer.Texture;
 
+import java.util.*;
 import java.io.File;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -78,5 +80,34 @@ public class AssetPool {
             AssetPool.sounds.put(file.getAbsolutePath(), sound);
             return sound;
         }
+    }
+
+    public static void loadDefaultResources() {
+        String assetsFolder = Paths.get("").toAbsolutePath() + "/assets/";
+        String imagesFolder = assetsFolder + "images/";
+        String soundsFolder = assetsFolder + "sounds/";
+        for (String s : getFilesRecursively(new File(imagesFolder + "block"))) {
+            if (s.endsWith(".png")) AssetPool.getTexture("assets/" + s.substring(assetsFolder.length()));
+        }
+        for (String s : getFilesRecursively(new File(soundsFolder))) {
+            if (s.endsWith(".ogg")) AssetPool.addSound("assets/" + s.substring(assetsFolder.length()), false);
+        }
+    }
+
+    private static List<String> getFilesRecursively(File dir){
+        List<String> ls = new ArrayList<String>();
+        if (dir.isDirectory())
+            for (File fObj : dir.listFiles()) {
+                if(fObj.isDirectory()) {
+                    ls.add(String.valueOf(fObj));
+                    ls.addAll(getFilesRecursively(fObj));
+                } else {
+                    ls.add(String.valueOf(fObj));
+                }
+            }
+        else
+            ls.add(String.valueOf(dir));
+
+        return ls;
     }
 }

@@ -1,6 +1,7 @@
 package com.mattmx.tartarus.components;
 
 import com.mattmx.tartarus.gameengine.renderer.Texture;
+import com.mattmx.tartarus.util.AssetPool;
 import org.joml.Vector2f;
 
 public class Sprite {
@@ -49,5 +50,13 @@ public class Sprite {
 
     public int getTexId() {
         return texture == null ? -1 : texture.getId();
+    }
+
+    public static Sprite of(String filepath, float width, float height) {
+        Sprite gen = new Sprite();
+        gen.setTexture(AssetPool.getTexture(filepath));
+        gen.setWidth(width);
+        gen.setHeight(height);
+        return gen;
     }
 }

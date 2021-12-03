@@ -32,6 +32,9 @@ public class ImGuiLayer {
     private MenuBar menuBar;
     private SceneHeirarchyWindow sceneHeirarchyWindow;
 
+    public ImFont def;
+    public ImFont title;
+
     public ImGuiLayer(long glfwWindow, PickingTexture pickingTexture) {
         this.glfwWindow = glfwWindow;
         this.gameViewWindow = new GameViewWindow();
@@ -54,9 +57,9 @@ public class ImGuiLayer {
         // Initialize ImGuiIO config
         final ImGuiIO io = ImGui.getIO();
 
-        io.setIniFilename("imgui.ini"); // We don't want to save .ini file
+        io.setIniFilename(null); // We don't want to save .ini file
         io.addConfigFlags(ImGuiConfigFlags.DockingEnable);
-        io.addConfigFlags(ImGuiConfigFlags.ViewportsEnable);
+        //io.addConfigFlags(ImGuiConfigFlags.ViewportsEnable);
         io.setBackendPlatformName("imgui_java_impl_glfw");
 
         // ------------------------------------------------------------
@@ -146,7 +149,8 @@ public class ImGuiLayer {
 
         // Fonts merge example
         fontConfig.setPixelSnapH(true);
-        fontAtlas.addFontFromFileTTF("assets/fonts/Metropolis-Thin.ttf", 16, fontConfig);
+        def = fontAtlas.addFontFromFileTTF("assets/fonts/Metropolis-Thin.ttf", 16, fontConfig);
+        title = fontAtlas.addFontFromFileTTF("assets/fonts/Metropolis-Black.ttf", 32, fontConfig);
 
         fontConfig.destroy(); // After all fonts were added we don't need this config more
 
@@ -161,12 +165,12 @@ public class ImGuiLayer {
         startFrame(dt);
 
         // Any Dear ImGui code SHOULD go between ImGui.newFrame()/ImGui.render() methods
-        setupDockspace();
+        //setupDockspace();
         currentScene.imgui();
         //ImGui.showDemoWindow();
-        gameViewWindow.imgui();
-        propertiesWindow.imgui();
-        sceneHeirarchyWindow.imgui();
+        //gameViewWindow.imgui();
+        //propertiesWindow.imgui();
+        //sceneHeirarchyWindow.imgui();
 
         endFrame();
     }

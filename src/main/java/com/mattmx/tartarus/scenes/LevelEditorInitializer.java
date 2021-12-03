@@ -2,9 +2,13 @@ package com.mattmx.tartarus.scenes;
 
 import com.mattmx.tartarus.components.*;
 import com.mattmx.tartarus.gameengine.*;
+import com.mattmx.tartarus.physics2D.components.Box2DCollider;
+import com.mattmx.tartarus.physics2D.components.RigidBody2D;
 import com.mattmx.tartarus.util.AssetPool;
 import imgui.ImGui;
 import imgui.ImVec2;
+import org.box2d.proto.Box2D;
+import org.jbox2d.dynamics.BodyType;
 import org.joml.Vector2f;
 
 import java.io.File;
@@ -49,7 +53,7 @@ public class LevelEditorInitializer extends SceneInitializer {
                         24, 48, 3, 0));
         AssetPool.getTexture("assets/images/char_static.png");
 
-        AssetPool.addSound("assets/sounds/1-up.ogg", false);
+        AssetPool.addSound("assets/sounds/entity/player/woosh_light.ogg", false);
 
         for (GameObject g : scene.getGameObjects()) {
             if (g.getComponent(SpriteRenderer.class) != null) {
@@ -85,6 +89,9 @@ public class LevelEditorInitializer extends SceneInitializer {
 
                 float windowX2 = windowPos.x + windowSize.x;
                 for (int i = 0; i < sprites.size(); i++) {
+                    if (i == 34) continue;
+                    if (i >= 38 && i < 61) continue;
+
                     Sprite sprite = sprites.getSprite(i);
                     float spriteWidth = sprite.getWidth() * 4;
                     float spriteHeight = sprite.getHeight() * 4;
@@ -94,6 +101,16 @@ public class LevelEditorInitializer extends SceneInitializer {
                     ImGui.pushID(i);
                     if (ImGui.imageButton(id, spriteWidth, spriteHeight, texCoords[2].x, texCoords[0].y, texCoords[0].x, texCoords[2].y)) {
                         GameObject object = Prefabs.generateSpriteObject(sprite, 0.25f, 0.25f);
+                        RigidBody2D rb = new RigidBody2D();
+                        rb.setBodyType(BodyType.STATIC);
+                        object.addComponent(rb);
+                        Box2DCollider b2d = new Box2DCollider();
+                        b2d.setHalfSize(new Vector2f(0.25f, 0.25f));
+                        object.addComponent(b2d);
+                        object.addComponent(new Ground());
+                        if (i == 12) {
+                            object.addComponent(new BreakableBlock());
+                        }
                         levelEditorStuff.getComponent(MouseControls.class).pickupObject(object);
                     }
                     ImGui.popID();
